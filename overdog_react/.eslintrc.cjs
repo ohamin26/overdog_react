@@ -20,7 +20,7 @@ module.exports = {
     'react/prop-types': 0,
     'react/jsx-pascal-case': 'warn',
     'react/function-component-definition': [2, { namedComponents: ['arrow-function'] }],
-    'react/react-in-jsx-scope': 0,
+    'react/react-in-jsx-scope': 'off',
     'no-var': 'warn',
     'no-unused-vars': ['off'],
     'no-console': ['off'],
