@@ -8,11 +8,16 @@ export const Header = () => {
   };
   return (
     <div>
-      <div className="flex items-center mx-2 my-2">
+      <div className="flex mx-2 my-2 justify-between ">
         <div className="text-2xl" onClick={onClick}>
           <IoIosArrowBack></IoIosArrowBack>
         </div>
-        <div className="ml-auto mr-auto font-bold">{location.pathname === '/' ? '게시물' : '댓글'}</div>
+        <div className="font-semibold">
+          {location.pathname === '/' ? '게시물' : location.pathname === '/comment' ? '댓글' : '공지사항'}
+        </div>
+        <div className="text-2xl text-white" onClick={onClick}>
+          <IoIosArrowBack></IoIosArrowBack>
+        </div>
       </div>
       <hr />
     </div>

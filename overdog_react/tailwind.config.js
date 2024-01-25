@@ -7,6 +7,9 @@ export default {
     screens: {
       mb: '479px',
     },
+    fontFamily: {
+      pretendard: ['Pretendard-Regular'],
+    },
   },
   plugins: [],
 };
