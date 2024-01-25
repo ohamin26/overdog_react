@@ -4,11 +4,11 @@ export const CommentMore = () => {
       <div className="rounded-full overflow-hidden bg-slate-600 size-8"></div>
       <div>
         <div className="flex">
-          <div className="ml-2 text-[13px] font-bold">nickname</div>
-          <div className="ml-2 text-[13px]">content</div>
+          <div className="ml-2 text-[14px] font-semibold">nickname</div>
+          <div className="ml-2 text-[14px]">content</div>
         </div>
         <div className="flex">
-          <div className="ml-2 text-[10px]">1주</div>
+          <div className="ml-2 text-[11px]">1주</div>
         </div>
       </div>
     </div>
