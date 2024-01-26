@@ -14,17 +14,6 @@ export const ContentBottom = () => {
   };
   return (
     <div>
-      {/* <div className="flex items-center my-2">
-        <div className="ml-2 text-[28px]">
-          {
-            //<img src="/reply_icon.jpg" alt="" width="26" />
-          }
-          <BiComment />
-        </div>
-        <div className="ml-auto mr-2 text-[28px]" onClick={onClickBook}>
-          <img src="/book_mark_off_icon.jpg" alt="" width="23" />
-        </div>
-      </div> */}
       <div className="flex-row ml-3 mt-3">
         <div className="flex justify-between">
           <div className="text-[14px] my-1 font-semibold">좋아요 1개</div>

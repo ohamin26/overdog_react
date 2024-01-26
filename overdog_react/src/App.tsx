@@ -2,19 +2,27 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Header } from './components/header';
 import { Content } from './routes/content';
 import { Comment } from './routes/comment';
-import { Notice } from './components/notice';
+import { Notice } from './routes/notice';
+import { NoticeDetail } from './routes/notice_detail';
+import { RecoilRoot } from 'recoil';
+import { collection, doc, getDoc, getDocs, query } from 'firebase/firestore';
+import { db } from './database/firebase';
+import { useEffect } from 'react';
 function App() {
   return (
-    <div className="font-pretendard">
-      <Router basename={import.meta.env.PUBLIC_URL}>
-        <Header></Header>
-        <Routes>
-          <Route path="/" element={<Content />}></Route>
-          <Route path="/comment" element={<Comment />}></Route>
-          <Route path="/notice" element={<Notice />}></Route>
-        </Routes>
-      </Router>
-    </div>
+    <RecoilRoot>
+      <div className="font-pretendard">
+        <Router basename={import.meta.env.PUBLIC_URL}>
+          <Header></Header>
+          <Routes>
+            <Route path="/" element={<Content />}></Route>
+            <Route path="/comment" element={<Comment />}></Route>
+            <Route path="/notice" element={<Notice />}></Route>
+            <Route path="/notice_detail" element={<NoticeDetail />}></Route>
+          </Routes>
+        </Router>
+      </div>
+    </RecoilRoot>
   );
 }
 export default App;
