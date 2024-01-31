@@ -5,9 +5,6 @@ import { Comment } from './routes/comment';
 import { Notice } from './routes/notice';
 import { NoticeDetail } from './routes/notice_detail';
 import { RecoilRoot } from 'recoil';
-import { collection, doc, getDoc, getDocs, query } from 'firebase/firestore';
-import { db } from './database/firebase';
-import { useEffect } from 'react';
 function App() {
   return (
     <RecoilRoot>

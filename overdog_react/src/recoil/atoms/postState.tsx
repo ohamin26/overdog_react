@@ -12,9 +12,26 @@ const getPost = async (id: string) => {
   return doc;
 };
 
+const getComment = async (id: string) => {
+  const collectionRef = collection(db, 'comment');
+  const postQuery = query(collectionRef, where('postId', '==', id));
+  const querySnapshot = await getDocs(postQuery);
+
+  const doc = querySnapshot.docs.map((doc) => doc.data());
+
+  return doc;
+};
+
 export const postState = atomFamily({
   key: 'postState',
   default: async (id: string) => {
     return await getPost(id);
+  },
+});
+
+export const commentState = atomFamily({
+  key: 'commentState',
+  default: async (id: string) => {
+    return await getComment(id);
   },
 });
