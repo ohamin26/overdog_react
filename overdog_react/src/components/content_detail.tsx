@@ -31,7 +31,7 @@ export const ContentDetail = (data: any) => {
     const nextIndex = (currentImageIndex + 1) % data.data.imageUrlList.length;
     setCurrentImageIndex(nextIndex);
   };
-  //이전 이미지 출력 이벤트
+  //이전 이미지 출력
   const goToPreviousImage = () => {
     const previousIndex = (currentImageIndex - 1 + data.data.imageUrlList.length) % data.data.imageUrlList.length;
     setCurrentImageIndex(previousIndex);

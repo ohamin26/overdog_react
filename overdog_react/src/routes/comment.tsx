@@ -5,17 +5,28 @@ import { PiCursorClick } from 'react-icons/pi';
 
 export const Comment = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const [isButtonClicked, setIsButtonClicked] = useState(false);
+  const [textareaValue, setTextareaValue] = useState('');
   const onClickCommentMore = () => {
     setIsVisible(!isVisible);
   };
   const onSubmit = () => {
     console.log(1);
+    reset;
+    setIsButtonClicked(true);
+
+    setTimeout(() => {
+      setIsButtonClicked(false);
+      setValue('comment', '');
+    }, 200);
   };
   const {
     formState: { isSubmitting },
     handleSubmit,
+    reset,
+    register,
+    setValue,
   } = useForm();
-
   return (
     <div>
       <div className="flex items-center my-3 mx-2">
@@ -41,15 +52,30 @@ export const Comment = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="fixed bottom-0 left-0 right-0 p-4 flex justify-center">
           <textarea
+            {...register('comment')}
             placeholder="댓글을 입력하세요."
             name=""
             id="comment"
             cols={30}
             rows={1}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSubmit(onSubmit)();
+              }
+            }}
+            onChange={(e) => setTextareaValue(e.target.value)}
             required
             className="border border-solid border-gray-500 p-2 rounded-xl focus:outline-none mr-2 w-full"
           ></textarea>
-          <button type="submit" disabled={isSubmitting} className={`bg-black text-white py-2 px-4 rounded-full`}>
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className={`bg-black text-white py-2 px-4 rounded-full ${
+              isButtonClicked && textareaValue.trim() !== '' ? 'bg-slate-500' : ''
+            }`}
+            onClick={() => (textareaValue.trim() == '' ? setIsButtonClicked(true) : '')}
+          >
             <PiCursorClick />
           </button>
         </div>

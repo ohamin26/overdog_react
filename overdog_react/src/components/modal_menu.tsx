@@ -23,9 +23,6 @@ export const ModalMenu = ({ onOpenModal }: any) => {
           <h3 className="text-center">메뉴</h3>
         </div>
         <div className="border-b px-4 py-2">
-          <h3 className="text-center">메뉴</h3>
-        </div>
-        <div className="border-b px-4 py-2">
           <h3 className="text-red-600 text-center cursor-pointer" onClick={onOpenModal}>
             닫기
           </h3>
