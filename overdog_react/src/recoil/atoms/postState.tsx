@@ -14,7 +14,7 @@ const getPost = async (id: string) => {
 
 //id == postId
 const getComment = async (id: string) => {
-  const collectionRef = collection(db, 'comment');
+  const collectionRef = collection(db, 'comments');
   const postQuery = query(collectionRef, where('postId', '==', id));
   const querySnapshot = await getDocs(postQuery);
 

@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { CommentMore } from '../components/comment_more';
 import { useForm } from 'react-hook-form';
 import { PiCursorClick } from 'react-icons/pi';
+import { useRecoilStateLoadable, useRecoilValueLoadable } from 'recoil';
+import { commentState } from '../recoil/atoms/postState';
 
 export const Comment = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -27,6 +29,8 @@ export const Comment = () => {
     register,
     setValue,
   } = useForm();
+  const comments = useRecoilValueLoadable(commentState('NZPl4Cr1fxH54bzJm7Wy'));
+  console.log(comments);
   return (
     <div>
       <div className="flex items-center my-3 mx-2">
