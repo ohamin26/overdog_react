@@ -3,7 +3,7 @@ import { db } from '../../database/firebase';
 import { atomFamily } from 'recoil';
 
 const getPost = async (id: string) => {
-  const collectionRef = collection(db, 'post');
+  const collectionRef = collection(db, 'posts');
   const postQuery = query(collectionRef, where('postId', '==', id), limit(1));
   const querySnapshot = await getDocs(postQuery);
 
@@ -23,7 +23,6 @@ const getComment = async (id: string) => {
   return doc;
 };
 
-//id == userId
 const setComment = async (data: any) => {
   try {
     const collectionRef = collection(db, 'comments');

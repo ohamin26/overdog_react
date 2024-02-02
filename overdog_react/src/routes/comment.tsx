@@ -1,11 +1,21 @@
 import { useState } from 'react';
 import { CommentMore } from '../components/comment_more';
+import { useForm } from 'react-hook-form';
+import { PiCursorClick } from 'react-icons/pi';
 
 export const Comment = () => {
   const [isVisible, setIsVisible] = useState(false);
   const onClickCommentMore = () => {
     setIsVisible(!isVisible);
   };
+  const onSubmit = () => {
+    console.log(1);
+  };
+  const {
+    formState: { isSubmitting },
+    handleSubmit,
+  } = useForm();
+
   return (
     <div>
       <div className="flex items-center my-3 mx-2">
@@ -27,6 +37,23 @@ export const Comment = () => {
         </div>
         {isVisible && <CommentMore />}
       </div>
+      {/* 댓글 입력받는 로직 */}
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="fixed bottom-0 left-0 right-0 p-4 flex justify-center">
+          <textarea
+            placeholder="댓글을 입력하세요."
+            name=""
+            id="comment"
+            cols={30}
+            rows={1}
+            required
+            className="border border-solid border-gray-500 p-2 rounded-xl focus:outline-none mr-2 w-full"
+          ></textarea>
+          <button type="submit" disabled={isSubmitting} className={`bg-black text-white py-2 px-4 rounded-full`}>
+            <PiCursorClick />
+          </button>
+        </div>
+      </form>
     </div>
   );
 };
