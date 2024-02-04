@@ -7,29 +7,36 @@ import { commentState, postIdState } from '../recoil/atoms/postState';
 import { useTime } from '../hooks/useTime';
 
 export const Comment = () => {
-  const [isButtonClicked, setIsButtonClicked] = useState(false);
-  const [textareaValue, setTextareaValue] = useState('');
-  const [postId] = useRecoilState(postIdState);
-  const [commentMore, setCommentMore] = useState('');
-
-  const [isVisibleArray, setIsVisibleArray] = useState(Array(1000).fill(false));
+  const [isButtonClicked, setIsButtonClicked] = useState(false); //댓글 전송 버튼 클릭 이벤트 관리 변수
+  const [textareaValue, setTextareaValue] = useState(''); // 댓글 입력글 관리용 변수
+  const [postId] = useRecoilState(postIdState); // 저정된 postId 가져오기
+  const [commentMoreUserId, setCommentMoreUserId] = useState(''); // 답글달기 관리 변수
+  const [commentMoreCommentId, setCommentMoreCommentId] = useState(''); // 답글달기 관리 변수
+  const [isVisibleArray, setIsVisibleArray] = useState(Array(1000).fill(false)); // 답글 모두 보기 관리 변수
   const {
     formState: { isSubmitting },
     handleSubmit,
     reset,
     register,
     setValue,
-  } = useForm();
-  const onClickCommentMoreBtn = (userId: any) => {
-    setCommentMore(userId);
+  } = useForm(); // form 관련 변수
+  // 답글 모두 보기 클릭 이벤트
+  const onClickCommentMoreBtn = (userId: any, commentId: any) => {
+    setCommentMoreUserId(userId);
+
+    setCommentMoreCommentId(commentId);
   };
+  // 답글 달기 버튼 이벤트
   const onSubmit = () => {
-    reset;
+    // 답글 쓴거 초기화
+    reset();
+
+    // 댓글 등록하기 위한 데이터
     const data = {
       userId: 1,
       commentContents: '1',
       postId: postId,
-      origin_commentId: commentMore != '' ? postId : 'null',
+      origin_commentId: commentMoreCommentId != '' ? commentMoreCommentId : 'null',
     };
     console.log(data);
     setIsButtonClicked(true);
@@ -39,10 +46,13 @@ export const Comment = () => {
       setValue('comment', '');
     }, 200);
 
-    setCommentMore('');
+    setCommentMoreUserId('');
+    setCommentMoreCommentId('');
   };
+  // 댓글 목록 불러오기
   const commentsLoadable = useRecoilValueLoadable(commentState(postId));
 
+  // commentsLoadable 비동기 상태 관리
   if (commentsLoadable.state === 'loading') {
     return <div>로딩 중...</div>;
   }
@@ -51,9 +61,11 @@ export const Comment = () => {
     return <div>에러가 발생했습니다.</div>;
   }
 
+  // commentsLoadable로 데이터를 받아온 걸 comments에 저장
   const comments = commentsLoadable.contents;
   return (
     <div>
+      {/* 가져온 댓글 목록 출력 */}
       {comments.map((data: any, index: any) => (
         <div key={data.commentId}>
           {data.origin_commentId != 'null' ? (
@@ -68,13 +80,18 @@ export const Comment = () => {
                     <div className="ml-2 text-[14px]">{data.commentContent}</div>
                   </div>
                   <div className="flex">
+                    {/* useTIme으로 가져온 시간 최적화하여 다시 출력 */}
                     <div className="ml-2 text-[11px]">{useTime(data)}</div>
-                    <div className="ml-2 text-[11px]" onClick={() => onClickCommentMoreBtn(data.userId)}>
+                    <div
+                      className="ml-2 text-[11px]"
+                      onClick={() => onClickCommentMoreBtn(data.userId, data.commentId)}
+                    >
                       답글 달기
                     </div>
                   </div>
                 </div>
               </div>
+              {/* 답글 모두 보기 클릭 이벤트 */}
               <div
                 className="ml-12 text-[11px]  w-fit"
                 onClick={() => {
@@ -99,13 +116,14 @@ export const Comment = () => {
         </div>
       ))}
 
-      {commentMore && (
+      {/* 답글 달기 클릭 시 누구에게 답글을 쓸 것인지 표시 / 취소 기능 포함 */}
+      {commentMoreUserId && (
         <div className="fixed bottom-12 left-0 right-0 p-4">
           <div
             className="bg-white border w-fit p-1 rounded-3xl text-[14px] text-gray-500"
-            onClick={() => setCommentMore('')}
+            onClick={() => setCommentMoreUserId('')}
           >
-            {commentMore} X
+            {commentMoreUserId} X
           </div>
         </div>
       )}

@@ -5,6 +5,7 @@ import { recoilPersist } from 'recoil-persist';
 
 const { persistAtom } = recoilPersist();
 
+// 게시물 목록 가져오기
 const getPost = async (id: string) => {
   const collectionRef = collection(db, 'posts');
   const postQuery = query(collectionRef, where('postId', '==', id), limit(1));
@@ -15,6 +16,7 @@ const getPost = async (id: string) => {
   return doc;
 };
 
+// 댓글 목록 가져오기
 //id == postId
 const getComment = async (id: string) => {
   const collectionRef = collection(db, 'comments');
@@ -26,6 +28,7 @@ const getComment = async (id: string) => {
   return doc;
 };
 
+// 댓글 추가하기 - 구현 중
 const setComment = async (data: any) => {
   try {
     const collectionRef = collection(db, 'comments');
@@ -56,6 +59,7 @@ export const setCommentState = atomFamily({
   },
 });
 
+// 게시물 id 관리
 export const postIdState = atom({
   key: 'postIdState',
   default: 'null',
