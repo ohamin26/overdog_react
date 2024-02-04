@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { FaRegLightbulb } from 'react-icons/fa';
 import ReactPaginate from 'react-paginate';
+import { useNavigate } from 'react-router';
 
 export const Notice = () => {
   const perPage = 5;
@@ -113,6 +114,10 @@ export const Notice = () => {
   };
   const offset = currentPage * perPage;
   const currentPageData = dummy.slice(offset, offset + perPage);
+  const navigate = useNavigate();
+  const onClick = () => {
+    navigate('/notice_detail');
+  };
   return (
     <div>
       <div className="flex justify-center items-center w-full h-[15vh] mt-3">
@@ -136,7 +141,7 @@ export const Notice = () => {
           </div>
           <div>
             <div className="flex items-center">
-              <div className="flex-1">
+              <div className="flex-1" onClick={onClick}>
                 <p className="text-sm font-medium text-gray-900 truncate">{data.contents}</p>
               </div>
             </div>

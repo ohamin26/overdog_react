@@ -1,32 +1,164 @@
 import { useState } from 'react';
 import { CommentMore } from '../components/comment_more';
+import { useForm } from 'react-hook-form';
+import { PiCursorClick } from 'react-icons/pi';
+import { useRecoilState, useRecoilValueLoadable } from 'recoil';
+import { commentState, postIdState } from '../recoil/atoms/postState';
+import { useTime } from '../hooks/useTime';
 
 export const Comment = () => {
-  const [isVisible, setIsVisible] = useState(false);
-  const onClickCommentMore = () => {
-    setIsVisible(!isVisible);
+  const [isButtonClicked, setIsButtonClicked] = useState(false); //댓글 전송 버튼 클릭 이벤트 관리 변수
+  const [textareaValue, setTextareaValue] = useState(''); // 댓글 입력글 관리용 변수
+  const [postId] = useRecoilState(postIdState); // 저정된 postId 가져오기
+  const [commentMoreUserId, setCommentMoreUserId] = useState(''); // 답글달기 관리 변수
+  const [commentMoreCommentId, setCommentMoreCommentId] = useState(''); // 답글달기 관리 변수
+  const [isVisibleArray, setIsVisibleArray] = useState(Array(1000).fill(false)); // 답글 모두 보기 관리 변수
+  const {
+    formState: { isSubmitting },
+    handleSubmit,
+    reset,
+    register,
+    setValue,
+  } = useForm(); // form 관련 변수
+  // 답글 모두 보기 클릭 이벤트
+  const onClickCommentMoreBtn = (userId: any, commentId: any) => {
+    setCommentMoreUserId(userId);
+
+    setCommentMoreCommentId(commentId);
   };
+  // 답글 달기 버튼 이벤트
+  const onSubmit = () => {
+    // 답글 쓴거 초기화
+    reset();
+
+    // 댓글 등록하기 위한 데이터
+    const data = {
+      userId: 1,
+      commentContents: '1',
+      postId: postId,
+      origin_commentId: commentMoreCommentId != '' ? commentMoreCommentId : 'null',
+    };
+    console.log(data);
+    setIsButtonClicked(true);
+
+    setTimeout(() => {
+      setIsButtonClicked(false);
+      setValue('comment', '');
+    }, 200);
+
+    setCommentMoreUserId('');
+    setCommentMoreCommentId('');
+  };
+  // 댓글 목록 불러오기
+  const commentsLoadable = useRecoilValueLoadable(commentState(postId));
+
+  // commentsLoadable 비동기 상태 관리
+  if (commentsLoadable.state === 'loading') {
+    return <div>로딩 중...</div>;
+  }
+
+  if (commentsLoadable.state === 'hasError') {
+    return <div>에러가 발생했습니다.</div>;
+  }
+
+  // commentsLoadable로 데이터를 받아온 걸 comments에 저장
+  const comments = commentsLoadable.contents;
   return (
     <div>
-      <div className="flex items-center my-3 mx-2">
-        <div className="rounded-full overflow-hidden bg-slate-600 size-8"></div>
-        <div>
-          <div className="flex">
-            <div className="ml-2 text-[14px] font-semibold">nickname</div>
-            <div className="ml-2 text-[14px]">content</div>
-          </div>
-          <div className="flex">
-            <div className="ml-2 text-[11px]">1주</div>
-            <div className="ml-2 text-[11px]">답글 달기</div>
+      {/* 가져온 댓글 목록 출력 */}
+      {comments.map((data: any, index: any) => (
+        <div key={data.commentId}>
+          {data.origin_commentId != 'null' ? (
+            ''
+          ) : (
+            <div>
+              <div className="flex items-center my-3 mx-2">
+                <div className="rounded-full overflow-hidden bg-slate-600 size-8"></div>
+                <div>
+                  <div className="flex">
+                    <div className="ml-2 text-[14px] font-semibold">nickname</div>
+                    <div className="ml-2 text-[14px]">{data.commentContent}</div>
+                  </div>
+                  <div className="flex">
+                    {/* useTIme으로 가져온 시간 최적화하여 다시 출력 */}
+                    <div className="ml-2 text-[11px]">{useTime(data)}</div>
+                    <div
+                      className="ml-2 text-[11px]"
+                      onClick={() => onClickCommentMoreBtn(data.userId, data.commentId)}
+                    >
+                      답글 달기
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* 답글 모두 보기 클릭 이벤트 */}
+              <div
+                className="ml-12 text-[11px]  w-fit"
+                onClick={() => {
+                  const newArray = [...isVisibleArray];
+                  newArray[index] = !newArray[index];
+                  setIsVisibleArray(newArray);
+                }}
+              >
+                <div className="text-gray-500 cursor-pointer hover:text-black">
+                  {comments.filter((item) => item.origin_commentId === data.commentId).length > 0
+                    ? isVisibleArray[index]
+                      ? '답글 숨기기'
+                      : `답글 ${comments.filter((item) => item.origin_commentId === data.commentId).length}개 모두 보기`
+                    : ''}
+                </div>
+                {isVisibleArray[index] && (
+                  <CommentMore data={comments.filter((item) => item.origin_commentId === data.commentId)} />
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      ))}
+
+      {/* 답글 달기 클릭 시 누구에게 답글을 쓸 것인지 표시 / 취소 기능 포함 */}
+      {commentMoreUserId && (
+        <div className="fixed bottom-12 left-0 right-0 p-4">
+          <div
+            className="bg-white border w-fit p-1 rounded-3xl text-[14px] text-gray-500"
+            onClick={() => setCommentMoreUserId('')}
+          >
+            {commentMoreUserId} X
           </div>
         </div>
-      </div>
-      <div className="ml-12 text-[11px]  w-fit" onClick={onClickCommentMore}>
-        <div className="text-gray-500 cursor-pointer hover:text-black">
-          {isVisible ? '답글 숨기기' : '답글 1개 모두 보기'}
+      )}
+      {/* 댓글 입력받는 로직 */}
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="fixed bottom-0 left-0 right-0 p-4 flex justify-center">
+          <textarea
+            {...register('comment')}
+            placeholder="댓글을 입력하세요."
+            name=""
+            id="comment"
+            cols={30}
+            rows={1}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSubmit(onSubmit)();
+              }
+            }}
+            onChange={(e) => setTextareaValue(e.target.value)}
+            required
+            className="border border-solid border-gray-500 p-2 rounded-xl focus:outline-none mr-2 w-full"
+          ></textarea>
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className={`bg-black text-white py-2 px-4 rounded-full ${
+              isButtonClicked && textareaValue.trim() !== '' ? 'bg-slate-500' : ''
+            }`}
+            onClick={() => (textareaValue.trim() == '' ? setIsButtonClicked(true) : '')}
+          >
+            <PiCursorClick />
+          </button>
         </div>
-        {isVisible && <CommentMore />}
-      </div>
+      </form>
     </div>
   );
 };

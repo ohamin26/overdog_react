@@ -3,15 +3,14 @@ import { getFirestore } from 'firebase/firestore';
 
 //firebase 연동
 const firebaseConfig = {
-  apiKey: process.env.Firebase_apiKey,
-  authDomain: process.env.Firebase_authDomain,
-  projectId: process.env.Firebase_projectId,
-  storageBucket: process.env.Firebase_storageBucket,
-  messagingSenderId: process.env.Firebase_messagingSenderId,
-  appId: process.env.Firebase_appId,
+  apiKey: import.meta.env.REACT_APP_Firebase_apiKey,
+  authDomain: 'overdog-577c3.firebaseapp.com',
+  projectId: 'overdog-577c3',
+  storageBucket: 'overdog-577c3.appspot.com',
+  messagingSenderId: import.meta.env.REACT_APP_Firebase_messagingSenderId,
+  appId: import.meta.env.REACT_APP_Firebase_appId,
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-
 export { db };
