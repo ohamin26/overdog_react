@@ -1,6 +1,9 @@
 import { addDoc, collection, getDocs, limit, query, where } from 'firebase/firestore';
 import { db } from '../../database/firebase';
-import { atomFamily } from 'recoil';
+import { atom, atomFamily } from 'recoil';
+import { recoilPersist } from 'recoil-persist';
+
+const { persistAtom } = recoilPersist();
 
 const getPost = async (id: string) => {
   const collectionRef = collection(db, 'posts');
@@ -51,4 +54,10 @@ export const setCommentState = atomFamily({
   default: async (data: any) => {
     return await setComment(data);
   },
+});
+
+export const postIdState = atom({
+  key: 'postIdState',
+  default: 'null',
+  effects_UNSTABLE: [persistAtom],
 });

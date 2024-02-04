@@ -1,12 +1,11 @@
-import { useRecoilValueLoadable } from 'recoil';
+import { useRecoilState, useRecoilValueLoadable } from 'recoil';
 import { ContentDetail } from '../components/content_detail';
-import { postState } from '../recoil/atoms/postState';
-import { Suspense, useEffect } from 'react';
+import { postIdState, postState } from '../recoil/atoms/postState';
+import { Suspense } from 'react';
 
 export const Content = () => {
   const postLoadable = useRecoilValueLoadable(postState('NZPl4Cr1fxH54bzJm7Wy'));
-
-  console.log(postLoadable);
+  const [, setPostId] = useRecoilState(postIdState);
 
   if (postLoadable.state === 'loading') {
     return <div>로딩 중...</div>;
@@ -17,7 +16,9 @@ export const Content = () => {
   }
 
   const post = postLoadable.contents;
-  console.log(post[0]);
+  if (postLoadable.state === 'hasValue') {
+    setPostId(post[0].postId);
+  }
   return (
     <Suspense fallback={'...loading'}>
       <div className="grid-rows-3">
