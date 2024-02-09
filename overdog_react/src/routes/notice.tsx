@@ -149,6 +149,7 @@ export const Notice = () => {
         </div>
       ))}
 
+      {/* 페이지네이션 추가 */}
       <ReactPaginate
         pageClassName={'inline-block mx-1 p-2 rounded-full cursor-pointer  '}
         pageLinkClassName={
