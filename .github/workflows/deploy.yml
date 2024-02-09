@@ -35,7 +35,7 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Install dependencies
-        run: pnpm ci
+        run: pnpm install
         if: steps.cache.outputs.cache-hit != 'true'
 
       - name: Set PUBLIC_URL
@@ -45,7 +45,7 @@ jobs:
 
       - name: Build
         run: |
-          vite build
+          npm run build
 
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v3
