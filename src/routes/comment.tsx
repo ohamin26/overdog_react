@@ -65,6 +65,7 @@ export const Comment = () => {
   console.log(commentsLoadable);
   // commentsLoadable로 데이터를 받아온 걸 comments에 저장
   const comments: any = commentsLoadable.contents;
+
   return (
     <div>
       {/* 가져온 댓글 목록 출력 */}

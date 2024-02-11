@@ -1,7 +1,19 @@
-import { addDoc, collection, doc, getDocs, limit, onSnapshot, query, updateDoc, where } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  doc,
+  getDocs,
+  limit,
+  onSnapshot,
+  orderBy,
+  query,
+  updateDoc,
+  where,
+} from 'firebase/firestore';
 import { db } from '../../database/firebase';
 import { atom, atomFamily } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
+import { set } from 'firebase/database';
 
 const { persistAtom } = recoilPersist();
 interface CommentData {
@@ -26,7 +38,7 @@ const getPost = async (id: string) => {
 //id == postId
 const getComment = (id: string) => {
   const collectionRef = collection(db, 'comments');
-  const postQuery = query(collectionRef, where('postId', '==', id));
+  const postQuery = query(collectionRef, where('postId', '==', id), orderBy('createdAt', 'desc'));
 
   return new Promise((resolve, reject) => {
     onSnapshot(
@@ -36,6 +48,7 @@ const getComment = (id: string) => {
           ...doc.data(),
         }));
         console.log(data);
+
         resolve(data); // 데이터를 resolve하여 Promise 완료
       },
       (error) => {
