@@ -1,10 +1,16 @@
-import { addDoc, collection, getDocs, limit, query, where } from 'firebase/firestore';
+import { addDoc, collection, doc, getDocs, limit, onSnapshot, query, updateDoc, where } from 'firebase/firestore';
 import { db } from '../../database/firebase';
 import { atom, atomFamily } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 
 const { persistAtom } = recoilPersist();
-
+interface CommentData {
+  commentContent: string;
+  postId: string;
+  originCommentId: string;
+  userId: string;
+  createdAt: Date;
+}
 // 게시물 목록 가져오기
 const getPost = async (id: string) => {
   const collectionRef = collection(db, 'posts');
@@ -18,21 +24,44 @@ const getPost = async (id: string) => {
 
 // 댓글 목록 가져오기
 //id == postId
-const getComment = async (id: string) => {
+const getComment = (id: string) => {
   const collectionRef = collection(db, 'comments');
   const postQuery = query(collectionRef, where('postId', '==', id));
-  const querySnapshot = await getDocs(postQuery);
 
-  const doc = querySnapshot.docs.map((doc) => doc.data());
-
-  return doc;
+  return new Promise((resolve, reject) => {
+    onSnapshot(
+      postQuery,
+      (querySnapshot) => {
+        const data = querySnapshot.docs.map((doc) => ({
+          ...doc.data(),
+        }));
+        console.log(data);
+        resolve(data); // 데이터를 resolve하여 Promise 완료
+      },
+      (error) => {
+        reject(error); // 에러가 발생하면 reject하여 Promise 실패
+      },
+    );
+  });
 };
 
-// 댓글 추가하기 - 구현 중
-const setComment = async (data: any) => {
+// 댓글 추가하기
+const setComment = async (data: CommentData) => {
   try {
     const collectionRef = collection(db, 'comments');
-    await addDoc(collectionRef, data);
+    const docRef = await addDoc(collectionRef, {
+      commentContent: data.commentContent,
+      postId: data.postId,
+      origin_commentId: data.originCommentId,
+      userId: data.userId,
+      createdAt: new Date(),
+    });
+
+    // 추가된 문서의 ID 가져오기
+    const addedDocId = docRef.id;
+
+    // 추가 데이터 업데이트
+    await updateDoc(doc(collectionRef, addedDocId), { commentId: addedDocId });
   } catch (e) {
     console.log(e);
   }
@@ -48,7 +77,7 @@ export const postState = atomFamily({
 export const commentState = atomFamily({
   key: 'commentState',
   default: async (id: string) => {
-    return await getComment(id);
+    return getComment(id);
   },
 });
 
