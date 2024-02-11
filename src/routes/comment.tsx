@@ -3,13 +3,13 @@ import { CommentMore } from '../components/comment_more';
 import { useForm } from 'react-hook-form';
 import { PiCursorClick } from 'react-icons/pi';
 import { useRecoilState, useRecoilValueLoadable } from 'recoil';
-import { commentState, postIdState } from '../recoil/atoms/postState';
+import { commentState, postIdState, setCommentState } from '../recoil/atoms/postState';
 import { useTime } from '../hooks/useTime';
 
 export const Comment = () => {
+  const [postId] = useRecoilState(postIdState); // 저정된 postId 가져오기
   const [isButtonClicked, setIsButtonClicked] = useState(false); //댓글 전송 버튼 클릭 이벤트 관리 변수
   const [textareaValue, setTextareaValue] = useState(''); // 댓글 입력글 관리용 변수
-  const [postId] = useRecoilState(postIdState); // 저정된 postId 가져오기
   const [commentMoreUserId, setCommentMoreUserId] = useState(''); // 답글달기 관리 변수
   const [commentMoreCommentId, setCommentMoreCommentId] = useState(''); // 답글달기 관리 변수
   const [isVisibleArray, setIsVisibleArray] = useState(Array(1000).fill(false)); // 답글 모두 보기 관리 변수
@@ -26,20 +26,22 @@ export const Comment = () => {
 
     setCommentMoreCommentId(commentId);
   };
+
   // 답글 달기 버튼 이벤트
   const onSubmit = () => {
     // 답글 쓴거 초기화
     reset();
-
+    const userComment = textareaValue.trim();
     // 댓글 등록하기 위한 데이터
     const data = {
       userId: 1,
-      commentContents: '1',
+      commentContent: userComment,
       postId: postId,
-      origin_commentId: commentMoreCommentId != '' ? commentMoreCommentId : 'null',
+      originCommentId: commentMoreCommentId != '' ? commentMoreCommentId : 'null',
     };
-    console.log(data);
+
     setIsButtonClicked(true);
+    setCommentState(data);
 
     setTimeout(() => {
       setIsButtonClicked(false);
@@ -60,9 +62,9 @@ export const Comment = () => {
   if (commentsLoadable.state === 'hasError') {
     return <div>에러가 발생했습니다.</div>;
   }
-
+  console.log(commentsLoadable);
   // commentsLoadable로 데이터를 받아온 걸 comments에 저장
-  const comments = commentsLoadable.contents;
+  const comments: any = commentsLoadable.contents;
   return (
     <div>
       {/* 가져온 댓글 목록 출력 */}
@@ -101,14 +103,16 @@ export const Comment = () => {
                 }}
               >
                 <div className="text-gray-500 cursor-pointer hover:text-black">
-                  {comments.filter((item) => item.origin_commentId === data.commentId).length > 0
+                  {comments.filter((item: any) => item.origin_commentId === data.commentId).length > 0
                     ? isVisibleArray[index]
                       ? '답글 숨기기'
-                      : `답글 ${comments.filter((item) => item.origin_commentId === data.commentId).length}개 모두 보기`
+                      : `답글 ${
+                          comments.filter((item: any) => item.origin_commentId === data.commentId).length
+                        }개 모두 보기`
                     : ''}
                 </div>
                 {isVisibleArray[index] && (
-                  <CommentMore data={comments.filter((item) => item.origin_commentId === data.commentId)} />
+                  <CommentMore data={comments.filter((item: any) => item.origin_commentId === data.commentId)} />
                 )}
               </div>
             </div>
