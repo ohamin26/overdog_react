@@ -13,7 +13,6 @@ import {
 import { db } from '../../database/firebase';
 import { atom, atomFamily } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
-import { set } from 'firebase/database';
 
 const { persistAtom } = recoilPersist();
 interface CommentData {
