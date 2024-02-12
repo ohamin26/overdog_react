@@ -22,7 +22,6 @@ export const Content = () => {
         return <div>에러가 발생했습니다.</div>;
       }
 
-      const postLoadable = useRecoilValueLoadable(postState(postId));
       const [, setPostId] = useRecoilState(postIdState);
       const [, setUserId] = useRecoilState(userIdState);
 
@@ -32,26 +31,22 @@ export const Content = () => {
         return <div>에러가 발생했습니다.</div>;
       }
 
-      if (postLoadable.state === 'loading') {
-        return <div>로딩 중...</div>;
-      }
-
-      if (postLoadable.state === 'hasError') {
+      if (postId !== null || postId != '') {
+        setPostId(postId);
+      } else {
         return <div>에러가 발생했습니다.</div>;
-      }
-
-      const post = postLoadable.contents;
-      if (postLoadable.state === 'hasValue') {
-        setPostId(post[0].postId);
       }
 
       window.flutter_inappwebview.postMessage(JSON.stringify(result));
     });
   });
 
-  const postLoadable = useRecoilValueLoadable(postState('NZPl4Cr1fxH54bzJm7Wy'));
-  const [, setPostId] = useRecoilState(postIdState);
-
+  const [postId, setPostId] = useRecoilState(postIdState);
+  setPostId('NZPl4Cr1fxH54bzJm7Wy');
+  if (postId == null) {
+    return <div>잘못된 접근입니다.</div>;
+  }
+  const postLoadable = useRecoilValueLoadable(postState(postId));
   if (postLoadable.state === 'loading') {
     return <div>로딩 중...</div>;
   }
