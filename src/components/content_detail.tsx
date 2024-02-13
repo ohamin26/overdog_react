@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IoIosMore } from 'react-icons/io';
 import { ModalMenu } from './modal_menu';
 import { useNavigate } from 'react-router';
@@ -6,6 +6,8 @@ import { BiLike } from 'react-icons/bi';
 import { BiSolidLike } from 'react-icons/bi';
 import { MdOutlineNavigateNext } from 'react-icons/md';
 import { GrFormPrevious } from 'react-icons/gr';
+import { useRecoilState } from 'recoil';
+import { deleteLikeState, likebyPostIdState, likebyUserIdState, setLikeState } from '../recoil/atoms/likeState';
 
 export const ContentDetail = (data: any) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -22,10 +24,30 @@ export const ContentDetail = (data: any) => {
   const onClick = () => {
     navigate(`/comment`);
   };
+
   //좋아요 버튼 클릭 시 버튼 이벤트
   const onClickLike = () => {
-    setIsVisible(!isVisible);
+    try {
+      if (isVisible) {
+        deleteLikeState(idData);
+      } else {
+        setLikeState(idData);
+      }
+
+      setIsVisible(!isVisible);
+      console.log(isVisible);
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
+  useEffect(() => {
+    setTimeout(() => {
+      const likeData: any = localStorage.getItem('like');
+      const userLikeData: any = localStorage.getItem('userLike');
+      userLikeData == null ? setUserLike(1) : setUserLike(JSON.parse(userLikeData));
+      setPostLike(JSON.parse(likeData));
+    }, 2000);
+  });
   //다음 이미지 출력 이벤트
   const goToNextImage = () => {
     const nextIndex = (currentImageIndex + 1) % data.data.imageUrlList.length;
@@ -37,6 +59,15 @@ export const ContentDetail = (data: any) => {
     setCurrentImageIndex(previousIndex);
   };
 
+  const [postLike, setPostLike]: any = useRecoilState(likebyPostIdState(data.data.postId));
+  const idData = {
+    postId: data.data && data.data.postId,
+    userId: data.data && data.data.userId,
+  };
+  const [userLike, setUserLike]: any = useRecoilState(likebyUserIdState(idData));
+  if (userLike == null) {
+    setIsVisible(!isVisible);
+  }
   return (
     <div>
       <div className="flex items-center my-3 mx-2">
@@ -69,7 +100,7 @@ export const ContentDetail = (data: any) => {
       </div>
       <div className="flex-row ml-3 mt-3">
         <div className="flex justify-between">
-          <div className="text-[14px] my-1 font-semibold">좋아요 1개</div>
+          <div className="text-[14px] my-1 font-semibold">좋아요 {postLike == null ? '0' : postLike.length}개</div>
           <div className="mx-2 text-[24px]" onClick={onClickLike}>
             {isVisible ? <BiSolidLike /> : <BiLike />}
           </div>

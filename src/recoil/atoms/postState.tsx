@@ -104,4 +104,5 @@ export const setCommentState = atomFamily({
 export const postIdState = atom({
   key: 'postIdState',
   default: 'null',
+  effects_UNSTABLE: [persistAtom],
 });
