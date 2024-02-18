@@ -122,7 +122,7 @@ export const likebyPostIdState = atomFamily({
       if (savedValue != null) {
         setSelf(JSON.parse(savedValue));
       }
-      onSet((newValue, oldValue, isReset) => {
+      onSet((newValue, _oldValue, isReset) => {
         if (savedValue == null && isReset) {
           localStorage.setItem(key, JSON.stringify(newValue));
         } else {

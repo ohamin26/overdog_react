@@ -5,6 +5,7 @@ import { PiCursorClick } from 'react-icons/pi';
 import { useRecoilState, useRecoilValueLoadable } from 'recoil';
 import { commentState, postIdState, setCommentState } from '../recoil/atoms/postState';
 import { useTime } from '../hooks/useTime';
+import toast, { Toaster } from 'react-hot-toast';
 
 export const Comment = () => {
   const [postId] = useRecoilState(postIdState); // 저정된 postId 가져오기
@@ -27,6 +28,7 @@ export const Comment = () => {
     setCommentMoreCommentId(commentId);
   };
 
+  const notifySet = () => toast('추가되었습니다');
   // 답글 달기 버튼 이벤트
   const onSubmit = () => {
     // 답글 쓴거 초기화
@@ -42,7 +44,7 @@ export const Comment = () => {
 
     setIsButtonClicked(true);
     setCommentState(data);
-
+    notifySet();
     setTimeout(() => {
       setIsButtonClicked(false);
       setValue('comment', '');
@@ -161,6 +163,20 @@ export const Comment = () => {
             onClick={() => (textareaValue.trim() == '' ? setIsButtonClicked(true) : '')}
           >
             <PiCursorClick />
+            <Toaster
+              position="bottom-center"
+              toastOptions={{
+                className: 'bg-black',
+                style: {
+                  border: '2px solid #FFFFFF',
+                  padding: '10px',
+                  color: '#FFFFFF',
+                  height: '8px',
+                  width: 'fit',
+                  fontSize: '12px',
+                },
+              }}
+            />
           </button>
         </div>
       </form>
