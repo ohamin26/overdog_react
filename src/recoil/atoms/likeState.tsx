@@ -60,9 +60,7 @@ const deleteLike = async (data: any) => {
     querySnapshot.forEach((doc) => {
       const docRef = doc.ref;
       deleteDoc(docRef)
-        .then(() => {
-          console.log('삭제');
-        })
+        .then(() => {})
         .catch((error) => {
           console.error('Error : ', error);
         });
@@ -79,9 +77,7 @@ const setLike = async (data: any) => {
     await addDoc(collectionRef, {
       userId: data.userId,
       postId: data.postId,
-    }).then(() => {
-      console.log(`추가`);
-    });
+    }).then(() => {});
   } catch (e) {
     console.log(e);
   }

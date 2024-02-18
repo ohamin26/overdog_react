@@ -41,7 +41,6 @@ export const ContentDetail = (data: any) => {
         notifySet();
       }
       setIsVisible(!isVisible);
-      console.log(isVisible);
     } catch (error) {
       console.error('Error:', error);
     }
@@ -111,7 +110,6 @@ export const ContentDetail = (data: any) => {
             <Toaster
               position="bottom-center"
               toastOptions={{
-                className: 'bg-black',
                 style: {
                   border: '2px solid #FFFFFF',
                   padding: '10px',
