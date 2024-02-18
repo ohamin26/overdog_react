@@ -170,7 +170,6 @@ export const Comment = () => {
             <Toaster
               position="bottom-center"
               toastOptions={{
-                className: 'bg-black',
                 style: {
                   border: '2px solid #FFFFFF',
                   padding: '10px',
@@ -178,6 +177,7 @@ export const Comment = () => {
                   height: '8px',
                   width: 'fit',
                   fontSize: '12px',
+                  background: 'black',
                 },
               }}
             />
