@@ -119,6 +119,7 @@ export const ContentDetail = (data: any) => {
                   height: '8px',
                   width: 'fit',
                   fontSize: '12px',
+                  background: 'black',
                 },
               }}
             />
