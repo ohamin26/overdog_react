@@ -41,7 +41,6 @@ flutter repo : https://github.com/quokka12/overdog
 
 ## 🧞 Member
 | Name | 오하민 | 
-| --- | --- | --- | --- | --- |
 | Profile | <img width="140px" src="https://avatars.githubusercontent.com/u/113972482?v=4"> |
 | Role | Frontend |
 | gitHub | https://github.com/ohamin26 |
