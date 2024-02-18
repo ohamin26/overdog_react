@@ -46,8 +46,8 @@ const getComment = (id: string) => {
         const data = querySnapshot.docs.map((doc) => ({
           ...doc.data(),
         }));
-        console.log(data);
 
+        localStorage.setItem('comment', JSON.stringify(data));
         resolve(data); // 데이터를 resolve하여 Promise 완료
       },
       (error) => {
@@ -89,8 +89,25 @@ export const postState = atomFamily({
 export const commentState = atomFamily({
   key: 'commentState',
   default: async (id: string) => {
-    return getComment(id);
+    return await getComment(id);
   },
+  effects: [
+    ({ setSelf, onSet }) => {
+      const key = 'comment';
+      const savedValue = localStorage.getItem(key);
+
+      if (savedValue != null) {
+        setSelf(JSON.parse(savedValue));
+      }
+      onSet((newValue, _oldValue, isReset) => {
+        if (savedValue == null && isReset) {
+          localStorage.setItem(key, JSON.stringify(newValue));
+        } else {
+          isReset ? localStorage.removeItem(key) : localStorage.setItem(key, JSON.stringify(newValue));
+        }
+      });
+    },
+  ],
 });
 
 export const setCommentState = atomFamily({

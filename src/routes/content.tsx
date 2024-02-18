@@ -42,7 +42,6 @@ export const Content = () => {
   });
 
   const [postId, setPostId] = useRecoilState(postIdState);
-  setPostId('NZPl4Cr1fxH54bzJm7Wy');
   if (postId == null) {
     return <div>잘못된 접근입니다.</div>;
   }
