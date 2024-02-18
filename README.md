@@ -40,11 +40,11 @@ flutter repo : https://github.com/quokka12/overdog
 |Frontend| ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%F7DF1E) ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white) ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white) ![SASS](https://img.shields.io/badge/SASS-hotpink.svg?style=for-the-badge&logo=SASS&logoColor=white) <img src="https://img.shields.io/badge/Recoil-3578E5?style=for-the-badge&logo=recoil&logoColor=white" />
 
 ## 🧞 Member
-| Name | 오하민 | 
-<br>
-| Profile | <img width="140px" src="https://avatars.githubusercontent.com/u/113972482?v=4"> |
-| Role | Frontend |
-| gitHub | https://github.com/ohamin26 |
+| Name | 오하민 |  | | |
+| --- | --- | --- | --- | --- |
+| Profile | <img width="140px" src="https://avatars.githubusercontent.com/u/113972482?v=4"> |  |  |  |
+| Role | Frontend |  | | |
+| gitHub | https://github.com/ohamin26 | | |  |
 
 
 ## 👩‍💻Etc...
