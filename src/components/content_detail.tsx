@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IoIosMore } from 'react-icons/io';
 import { ModalMenu } from './modal_menu';
 import { useNavigate } from 'react-router';
@@ -6,6 +6,9 @@ import { BiLike } from 'react-icons/bi';
 import { BiSolidLike } from 'react-icons/bi';
 import { MdOutlineNavigateNext } from 'react-icons/md';
 import { GrFormPrevious } from 'react-icons/gr';
+import { useRecoilState } from 'recoil';
+import { deleteLikeState, likebyPostIdState, likebyUserIdState, setLikeState } from '../recoil/atoms/likeState';
+import toast, { Toaster } from 'react-hot-toast';
 
 export const ContentDetail = (data: any) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -22,10 +25,35 @@ export const ContentDetail = (data: any) => {
   const onClick = () => {
     navigate(`/comment`);
   };
+
+  const notifySet = () => toast('추가되었습니다');
+
+  const notifyDelete = () => toast('삭제되었습니다');
+
   //좋아요 버튼 클릭 시 버튼 이벤트
   const onClickLike = () => {
-    setIsVisible(!isVisible);
+    try {
+      if (isVisible) {
+        deleteLikeState(idData);
+        notifyDelete();
+      } else {
+        setLikeState(idData);
+        notifySet();
+      }
+      setIsVisible(!isVisible);
+      console.log(isVisible);
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
+  useEffect(() => {
+    setTimeout(() => {
+      const likeData: any = localStorage.getItem('like');
+      const userLikeData: any = localStorage.getItem('userLike');
+      userLikeData == null ? setUserLike(1) : setUserLike(JSON.parse(userLikeData));
+      setPostLike(JSON.parse(likeData));
+    }, 2000);
+  });
   //다음 이미지 출력 이벤트
   const goToNextImage = () => {
     const nextIndex = (currentImageIndex + 1) % data.data.imageUrlList.length;
@@ -37,12 +65,21 @@ export const ContentDetail = (data: any) => {
     setCurrentImageIndex(previousIndex);
   };
 
+  const [postLike, setPostLike]: any = useRecoilState(likebyPostIdState(data.data.postId));
+  const idData = {
+    postId: data.data && data.data.postId,
+    userId: data.data && data.data.userId,
+  };
+  const [userLike, setUserLike]: any = useRecoilState(likebyUserIdState(idData));
+  if (userLike == null) {
+    setIsVisible(!isVisible);
+  }
   return (
     <div>
       <div className="flex items-center my-3 mx-2">
         <div className="rounded-full overflow-hidden bg-slate-600 size-8"></div>
         <div className="ml-2 text-[14px] font-bold">{data.data.userId}</div>
-        <div className="ml-2 text-blue-400 text-[14px]">팔로우</div>
+        <div className="ml-2 text-blue-400 text-[14px] ">팔로우</div>
         <div className="ml-auto">
           <IoIosMore onClick={onOpenModal}></IoIosMore>
           {isModal && <ModalMenu onOpenModal={onOpenModal} />}
@@ -69,8 +106,22 @@ export const ContentDetail = (data: any) => {
       </div>
       <div className="flex-row ml-3 mt-3">
         <div className="flex justify-between">
-          <div className="text-[14px] my-1 font-semibold">좋아요 1개</div>
+          <div className="text-[14px] my-1 font-semibold">좋아요 {postLike == null ? '0' : postLike.length}개</div>
           <div className="mx-2 text-[24px]" onClick={onClickLike}>
+            <Toaster
+              position="bottom-center"
+              toastOptions={{
+                className: 'bg-black',
+                style: {
+                  border: '2px solid #FFFFFF',
+                  padding: '10px',
+                  color: '#FFFFFF',
+                  height: '8px',
+                  width: 'fit',
+                  fontSize: '12px',
+                },
+              }}
+            />
             {isVisible ? <BiSolidLike /> : <BiLike />}
           </div>
         </div>
@@ -83,7 +134,7 @@ export const ContentDetail = (data: any) => {
             #{data + ' '}
           </span>
         ))}
-        <div className="text-[13px] text-gray-500 cursor-pointer hover:text-black w-fit" onClick={onClick}>
+        <div className="text-[13px] text-gray-500 cursor-pointer hover:text-black w-fit " onClick={onClick}>
           댓글 1개 모두 보기
         </div>
         <div className="text-[13px] text-gray-500">1시간 전</div>

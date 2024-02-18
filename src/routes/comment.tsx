@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CommentMore } from '../components/comment_more';
 import { useForm } from 'react-hook-form';
 import { PiCursorClick } from 'react-icons/pi';
-import { useRecoilState, useRecoilValueLoadable } from 'recoil';
+import { useRecoilState, useRecoilStateLoadable } from 'recoil';
 import { commentState, postIdState, setCommentState } from '../recoil/atoms/postState';
 import { useTime } from '../hooks/useTime';
+import toast, { Toaster } from 'react-hot-toast';
 
 export const Comment = () => {
   const [postId] = useRecoilState(postIdState); // 저정된 postId 가져오기
@@ -27,6 +28,7 @@ export const Comment = () => {
     setCommentMoreCommentId(commentId);
   };
 
+  const notifySet = () => toast('추가되었습니다');
   // 답글 달기 버튼 이벤트
   const onSubmit = () => {
     // 답글 쓴거 초기화
@@ -42,7 +44,7 @@ export const Comment = () => {
 
     setIsButtonClicked(true);
     setCommentState(data);
-
+    notifySet();
     setTimeout(() => {
       setIsButtonClicked(false);
       setValue('comment', '');
@@ -52,7 +54,7 @@ export const Comment = () => {
     setCommentMoreCommentId('');
   };
   // 댓글 목록 불러오기
-  const commentsLoadable = useRecoilValueLoadable(commentState(postId));
+  const [commentsLoadable, setCommentLoadable] = useRecoilStateLoadable(commentState(postId));
 
   // commentsLoadable 비동기 상태 관리
   if (commentsLoadable.state === 'loading') {
@@ -62,9 +64,14 @@ export const Comment = () => {
   if (commentsLoadable.state === 'hasError') {
     return <div>에러가 발생했습니다.</div>;
   }
-  console.log(commentsLoadable);
   // commentsLoadable로 데이터를 받아온 걸 comments에 저장
   const comments: any = commentsLoadable.contents;
+  useEffect(() => {
+    setTimeout(() => {
+      const data: any = localStorage.getItem('comment');
+      setCommentLoadable(JSON.parse(data));
+    }, 5000);
+  });
   return (
     <div>
       {/* 가져온 댓글 목록 출력 */}
@@ -160,6 +167,20 @@ export const Comment = () => {
             onClick={() => (textareaValue.trim() == '' ? setIsButtonClicked(true) : '')}
           >
             <PiCursorClick />
+            <Toaster
+              position="bottom-center"
+              toastOptions={{
+                className: 'bg-black',
+                style: {
+                  border: '2px solid #FFFFFF',
+                  padding: '10px',
+                  color: '#FFFFFF',
+                  height: '8px',
+                  width: 'fit',
+                  fontSize: '12px',
+                },
+              }}
+            />
           </button>
         </div>
       </form>

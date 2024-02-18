@@ -1,6 +1,7 @@
 export const useTime = (data: any) => {
   // comments.createdAt.toDate()에서 얻은 Date 객체
-  const date = data.createdAt.toDate();
+  const timestamp = new Date(data.createdAt.seconds * 1000 + data.createdAt.nanoseconds / 1000000);
+  const date: any = timestamp;
 
   // 현재 시간을 얻기
   const currentDate: any = new Date();
