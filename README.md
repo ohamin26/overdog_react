@@ -6,7 +6,6 @@
 
 오버독(OVERDOG)은 키우고 있는 사랑스러운 강아지와 강아지의 다양한 패션 아이템, 스타일, 일상들을 공유하여 다른 사용자들과 소통하고 정보를 나눌 수 있는 플랫폼입니다<br>
 flutter + react로 개발하였으면 해당 repo는 react 부분에 대한 repo입니다.
-flutter repo : https://github.com/quokka12/overdog
 <br> <br>
 
 </div>
@@ -16,9 +15,9 @@ flutter repo : https://github.com/quokka12/overdog
 
 
 
-## ✨ Service
+## ✨ FLUTTER REPO 보러가기
 <div align = "center">
-  
+flutter repo : https://github.com/quokka12/overdog
   
 </div>
   
