@@ -28,7 +28,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/{package-lock.json,pnpm-lock.yaml}') }}
           restore-keys: |
             ${{ runner.os }}-node-
 
@@ -41,12 +41,11 @@ jobs:
 
       - name: Set PUBLIC_URL
         run: |
-          PUBLIC_URL=$(echo $GITHUB_REPOSITORY | sed -r 's/^.+\/(.+)$/\/\1\//')
-          echo PUBLIC_URL=$PUBLIC_URL > .env
+          echo "PUBLIC_URL=/$GITHUB_REPOSITORY/" >> .env
 
       - name: Build
         run: |
-          npm run build
+          pnpm run build
 
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v3
