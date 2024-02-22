@@ -122,7 +122,7 @@ export const Notice = () => {
     <div>
       <div className="flex justify-center items-center w-full h-[15vh] mt-3">
         <div>
-          <img src="../../public/free-icon-cool-7298816.png" width={55}></img>
+          <img src="../../overdog_react/free-icon-cool-7298816.png" width={55}></img>
           <span>overdog</span>
         </div>
       </div>
