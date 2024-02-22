@@ -50,7 +50,7 @@ export const ContentDetail = (data: any) => {
   };
   const onClickFollow = () => {
     try {
-      if (followVisible) {
+      if (!followVisible) {
         deleteFollowState(followData);
         notifyDelete();
       } else {
@@ -98,16 +98,16 @@ export const ContentDetail = (data: any) => {
     followingId: userId,
     followerId: data.data.userId,
   };
-  const [following, setFollowing] = useRecoilState(followingState(followData));
-  if (following == null) {
-    setIsVisible(!followVisible);
+  const [following, setFollowing]: any = useRecoilState(followingState(followData));
+  if (following.length !== 0) {
+    setFollowVisible(!followVisible);
   }
   return (
     <div>
       <div className="flex items-center my-3 mx-2">
         <div className="rounded-full overflow-hidden bg-slate-600 size-8"></div>
         <div className="ml-2 text-[14px] font-bold">{data.data.userId}</div>
-        {followVisible ? (
+        {!followVisible ? (
           <div className="ml-2 text-blue-400 text-[14px] " onClick={onClickFollow}>
             팔로우
           </div>

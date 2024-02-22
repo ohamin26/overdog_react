@@ -18,7 +18,6 @@ const getFollowing = (data: any) => {
         }));
 
         localStorage.setItem('following', JSON.stringify(data));
-        console.log('data:', data);
         resolve(data); // 데이터를 resolve하여 Promise 완료
       },
       (error) => {
