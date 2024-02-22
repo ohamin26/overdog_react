@@ -9,9 +9,12 @@ import { GrFormPrevious } from 'react-icons/gr';
 import { useRecoilState } from 'recoil';
 import { deleteLikeState, likebyPostIdState, likebyUserIdState, setLikeState } from '../recoil/atoms/likeState';
 import toast, { Toaster } from 'react-hot-toast';
+import { deleteFollowState, followingState, setFollowState } from '../recoil/atoms/followState';
+import { userIdState } from '../recoil/atoms/userState';
 
 export const ContentDetail = (data: any) => {
   const [isVisible, setIsVisible] = useState(false);
+  const [followVisible, setFollowVisible] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const isAtFirstImage = currentImageIndex === 0;
   const isAtLastImage = currentImageIndex === data.data.imageUrlList.length - 1;
@@ -45,12 +48,28 @@ export const ContentDetail = (data: any) => {
       console.error('Error:', error);
     }
   };
+  const onClickFollow = () => {
+    try {
+      if (followVisible) {
+        deleteFollowState(followData);
+        notifyDelete();
+      } else {
+        setFollowState(followData);
+        notifySet();
+      }
+      setFollowVisible(!followVisible);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
   useEffect(() => {
     setTimeout(() => {
       const likeData: any = localStorage.getItem('like');
       const userLikeData: any = localStorage.getItem('userLike');
       userLikeData == null ? setUserLike(1) : setUserLike(JSON.parse(userLikeData));
       setPostLike(JSON.parse(likeData));
+      const followingData: string | null = localStorage.getItem('following');
+      setFollowing(followingData ? JSON.parse(followingData) : null);
     }, 5000);
   });
   //다음 이미지 출력 이벤트
@@ -73,12 +92,30 @@ export const ContentDetail = (data: any) => {
   if (userLike == null) {
     setIsVisible(!isVisible);
   }
+
+  const [userId] = useRecoilState(userIdState);
+  const followData: any = {
+    followingId: userId,
+    followerId: data.data.userId,
+  };
+  const [following, setFollowing] = useRecoilState(followingState(followData));
+  if (following == null) {
+    setIsVisible(!followVisible);
+  }
   return (
     <div>
       <div className="flex items-center my-3 mx-2">
         <div className="rounded-full overflow-hidden bg-slate-600 size-8"></div>
         <div className="ml-2 text-[14px] font-bold">{data.data.userId}</div>
-        {/* <div className="ml-2 text-blue-400 text-[14px] ">팔로우</div> */}
+        {followVisible ? (
+          <div className="ml-2 text-blue-400 text-[14px] " onClick={onClickFollow}>
+            팔로우
+          </div>
+        ) : (
+          <div className="ml-2 text-black text-[14px] " onClick={onClickFollow}>
+            팔로우
+          </div>
+        )}
         {/* <div className="ml-auto">
           <IoIosMore onClick={onOpenModal}></IoIosMore>
           {isModal && <ModalMenu onOpenModal={onOpenModal} />}
