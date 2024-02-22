@@ -114,7 +114,6 @@ export const likebyPostIdState = atomFamily({
       const key = 'like';
       const savedValue = localStorage.getItem(key);
 
-      console.log(savedValue);
       if (savedValue != null) {
         setSelf(JSON.parse(savedValue));
       }
