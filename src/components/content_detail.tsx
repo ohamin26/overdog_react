@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { IoIosMore } from 'react-icons/io';
-import { ModalMenu } from './modal_menu';
+// import { IoIosMore } from 'react-icons/io';
+// import { ModalMenu } from './modal_menu';
 import { useNavigate } from 'react-router';
 import { BiLike } from 'react-icons/bi';
 import { BiSolidLike } from 'react-icons/bi';
@@ -15,12 +15,12 @@ export const ContentDetail = (data: any) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const isAtFirstImage = currentImageIndex === 0;
   const isAtLastImage = currentImageIndex === data.data.imageUrlList.length - 1;
-  const [isModal, setIsModal] = useState(false);
+  // const [isModal, setIsModal] = useState(false);
   const navigate = useNavigate();
   //모달창 실행 이벤트
-  const onOpenModal = () => {
-    setIsModal(!isModal);
-  };
+  // const onOpenModal = () => {
+  //   setIsModal(!isModal);
+  // };
   //댓글 모두 보기 클릭 시 버튼 이벤트
   const onClick = () => {
     navigate(`/comment`);
@@ -51,7 +51,7 @@ export const ContentDetail = (data: any) => {
       const userLikeData: any = localStorage.getItem('userLike');
       userLikeData == null ? setUserLike(1) : setUserLike(JSON.parse(userLikeData));
       setPostLike(JSON.parse(likeData));
-    }, 2000);
+    }, 5000);
   });
   //다음 이미지 출력 이벤트
   const goToNextImage = () => {
@@ -78,11 +78,11 @@ export const ContentDetail = (data: any) => {
       <div className="flex items-center my-3 mx-2">
         <div className="rounded-full overflow-hidden bg-slate-600 size-8"></div>
         <div className="ml-2 text-[14px] font-bold">{data.data.userId}</div>
-        <div className="ml-2 text-blue-400 text-[14px] ">팔로우</div>
-        <div className="ml-auto">
+        {/* <div className="ml-2 text-blue-400 text-[14px] ">팔로우</div> */}
+        {/* <div className="ml-auto">
           <IoIosMore onClick={onOpenModal}></IoIosMore>
           {isModal && <ModalMenu onOpenModal={onOpenModal} />}
-        </div>
+        </div> */}
       </div>
       <div className="relative">
         <img src={data.data.imageUrlList[currentImageIndex]} alt="컨텐츠 이미지" className="w-full h-72" />
