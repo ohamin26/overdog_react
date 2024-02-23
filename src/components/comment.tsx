@@ -7,7 +7,7 @@ import { commentState, postIdState, setCommentState } from '../recoil/atoms/post
 import { useTime } from '../hooks/useTime';
 import toast, { Toaster } from 'react-hot-toast';
 
-export const Comment = () => {
+export const Comment = (comments: any) => {
   const [postId] = useRecoilState(postIdState); // 저정된 postId 가져오기
   const [isButtonClicked, setIsButtonClicked] = useState(false); //댓글 전송 버튼 클릭 이벤트 관리 변수
   const [textareaValue, setTextareaValue] = useState(''); // 댓글 입력글 관리용 변수
@@ -36,7 +36,7 @@ export const Comment = () => {
     const userComment = textareaValue.trim();
     // 댓글 등록하기 위한 데이터
     const data = {
-      userId: 1,
+      userId: 'test',
       commentContent: userComment,
       postId: postId,
       originCommentId: commentMoreCommentId != '' ? commentMoreCommentId : 'null',
@@ -54,18 +54,8 @@ export const Comment = () => {
     setCommentMoreCommentId('');
   };
   // 댓글 목록 불러오기
-  const [commentsLoadable, setCommentLoadable] = useRecoilStateLoadable(commentState(postId));
+  const [, setCommentLoadable] = useRecoilStateLoadable(commentState(postId));
 
-  // commentsLoadable 비동기 상태 관리
-  if (commentsLoadable.state === 'loading') {
-    return <div>로딩 중...</div>;
-  }
-
-  if (commentsLoadable.state === 'hasError') {
-    return <div>에러가 발생했습니다.</div>;
-  }
-  // commentsLoadable로 데이터를 받아온 걸 comments에 저장
-  const comments: any = commentsLoadable.contents;
   useEffect(() => {
     setTimeout(() => {
       const data: any = localStorage.getItem('comment');
@@ -75,7 +65,7 @@ export const Comment = () => {
   return (
     <div className="font-pretendard">
       {/* 가져온 댓글 목록 출력 */}
-      {comments.map((data: any, index: any) => (
+      {comments.comments.map((data: any, index: any) => (
         <div key={data.commentId}>
           {data.origin_commentId != 'null' ? (
             ''
@@ -85,7 +75,7 @@ export const Comment = () => {
                 <div className="rounded-full overflow-hidden bg-slate-600 size-8"></div>
                 <div>
                   <div className="flex">
-                    <div className="ml-2 text-[14px] font-semibold">nickname</div>
+                    <div className="ml-2 text-[14px] font-semibold">{data.userId}</div>
                     <div className="ml-2 text-[14px]">{data.commentContent}</div>
                   </div>
                   <div className="flex">
@@ -110,16 +100,18 @@ export const Comment = () => {
                 }}
               >
                 <div className="text-gray-500 cursor-pointer hover:text-black">
-                  {comments.filter((item: any) => item.origin_commentId === data.commentId).length > 0
+                  {comments.comments.filter((item: any) => item.origin_commentId === data.commentId).length > 0
                     ? isVisibleArray[index]
                       ? '답글 숨기기'
                       : `답글 ${
-                          comments.filter((item: any) => item.origin_commentId === data.commentId).length
+                          comments.comments.filter((item: any) => item.origin_commentId === data.commentId).length
                         }개 모두 보기`
                     : ''}
                 </div>
                 {isVisibleArray[index] && (
-                  <CommentMore data={comments.filter((item: any) => item.origin_commentId === data.commentId)} />
+                  <CommentMore
+                    data={comments.comments.filter((item: any) => item.origin_commentId === data.commentId)}
+                  />
                 )}
               </div>
             </div>

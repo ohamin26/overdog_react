@@ -9,7 +9,7 @@ export const CommentMore = (data: any) => {
           <div className="rounded-full overflow-hidden bg-slate-600 size-8"></div>
           <div>
             <div className="flex">
-              <div className="ml-2 text-[14px] font-semibold">nickname</div>
+              <div className="ml-2 text-[14px] font-semibold">{commentData.userId}</div>
               <div className="ml-2 text-[14px]">{commentData.commentContent}</div>
             </div>
             <div className="flex">
