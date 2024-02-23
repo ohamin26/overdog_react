@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from 'react-router';
 import { PiSquaresFourLight } from 'react-icons/pi';
 import { useRecoilStateLoadable } from 'recoil';
 import { postByUserIdState } from '../recoil/atoms/postState';
+//라우팅 추가해야함
 export const Profile = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
