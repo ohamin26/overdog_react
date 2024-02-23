@@ -4,12 +4,12 @@ import { postIdState, postState } from '../recoil/atoms/postState';
 import { Suspense } from 'react';
 import { userIdState } from '../recoil/atoms/userState';
 
+// 이벤트 리스너를 등록하고 즉시 핸들러 함수 호출
 declare global {
   interface Window {
-    flutter_inappwebview: any;
+    callHandler: (arg: string) => Promise<any>;
   }
 }
-
 export const Content = () => {
   //flutter 통신 로직
   const handleFromAppToWeb = (result: any) => {
@@ -39,12 +39,11 @@ export const Content = () => {
       return;
     }
 
-    window.flutter_inappwebview.postMessage(JSON.stringify(result));
+    window.postMessage(JSON.stringify(result));
   };
 
-  // 이벤트 리스너를 등록하고 즉시 핸들러 함수 호출
   window.addEventListener('fromApptoWeb', () => {
-    window.flutter_inappwebview.callHandler('fromApptoWeb').then(handleFromAppToWeb);
+    window.callHandler('fromApptoWeb').then(handleFromAppToWeb);
   });
 
   const [postId, setPostId] = useRecoilState(postIdState);

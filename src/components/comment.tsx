@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { CommentMore } from '../components/comment_more';
+import { CommentMore } from './comment_more';
 import { useForm } from 'react-hook-form';
 import { PiCursorClick } from 'react-icons/pi';
 import { useRecoilState, useRecoilStateLoadable } from 'recoil';
@@ -73,7 +73,7 @@ export const Comment = () => {
     }, 5000);
   });
   return (
-    <div>
+    <div className="font-pretendard">
       {/* 가져온 댓글 목록 출력 */}
       {comments.map((data: any, index: any) => (
         <div key={data.commentId}>

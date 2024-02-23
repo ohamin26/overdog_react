@@ -1,7 +1,7 @@
 import { HashRouter as Router, Route, Routes } from 'react-router-dom';
 import { Header } from './components/header';
 import { Content } from './routes/content';
-import { Comment } from './routes/comment';
+import { Comment } from './components/comment';
 import { Notice } from './routes/notice';
 import { NoticeDetail } from './routes/notice_detail';
 import { RecoilRoot } from 'recoil';
