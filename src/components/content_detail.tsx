@@ -126,7 +126,9 @@ export const ContentDetail = (data: any) => {
   return (
     <div>
       <div className="flex items-center my-3 mx-2">
-        <div className="rounded-full overflow-hidden bg-slate-600 size-8"></div>
+        <div className="rounded-full overflow-hidden size-10">
+          <img src="../../overdog_react/free-icon-cool-7298816.png"></img>
+        </div>
         <div className="ml-2 text-[14px] font-bold">{data.data.userId}</div>
         {followVisible ? (
           <div className="ml-2 text-blue-400 text-[14px] " onClick={onClickFollow}>
