@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
-// import { IoIosMore } from 'react-icons/io';
-// import { ModalMenu } from './modal_menu';
-import { useNavigate } from 'react-router';
+import { IoIosMore } from 'react-icons/io';
+import { ModalMenu } from './modal_menu';
 import { BiLike } from 'react-icons/bi';
 import { BiSolidLike } from 'react-icons/bi';
 import { MdOutlineNavigateNext } from 'react-icons/md';
@@ -11,6 +10,9 @@ import { deleteLikeState, likebyPostIdState, likebyUserIdState, setLikeState } f
 import toast, { Toaster } from 'react-hot-toast';
 import { deleteFollowState, followingState, setFollowState } from '../recoil/atoms/followState';
 import { userIdState } from '../recoil/atoms/userState';
+import { BottomSheet } from 'react-spring-bottom-sheet';
+import 'react-spring-bottom-sheet/dist/style.css';
+import { Comment } from './comment';
 
 export const ContentDetail = (data: any) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -18,15 +20,19 @@ export const ContentDetail = (data: any) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const isAtFirstImage = currentImageIndex === 0;
   const isAtLastImage = currentImageIndex === data.data.imageUrlList.length - 1;
-  // const [isModal, setIsModal] = useState(false);
-  const navigate = useNavigate();
+  const [isModal, setIsModal] = useState(false);
+
   //모달창 실행 이벤트
-  // const onOpenModal = () => {
-  //   setIsModal(!isModal);
-  // };
+  const onOpenModal = () => {
+    setIsModal(!isModal);
+  };
   //댓글 모두 보기 클릭 시 버튼 이벤트
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const onClick = () => {
-    navigate(`/comment`);
+    setIsBottomSheetOpen(!isBottomSheetOpen);
+  };
+  const closeBottomSheet = () => {
+    setIsBottomSheetOpen(false);
   };
 
   const notifySet = () => toast('추가되었습니다');
@@ -50,7 +56,7 @@ export const ContentDetail = (data: any) => {
   };
   const onClickFollow = () => {
     try {
-      if (!followVisible) {
+      if (followVisible) {
         deleteFollowState(followData);
         notifyDelete();
       } else {
@@ -99,15 +105,13 @@ export const ContentDetail = (data: any) => {
     followerId: data.data.userId,
   };
   const [following, setFollowing]: any = useRecoilState(followingState(followData));
-  if (following.length !== 0) {
-    setFollowVisible(!followVisible);
-  }
+
   return (
     <div>
       <div className="flex items-center my-3 mx-2">
         <div className="rounded-full overflow-hidden bg-slate-600 size-8"></div>
         <div className="ml-2 text-[14px] font-bold">{data.data.userId}</div>
-        {!followVisible ? (
+        {followVisible ? (
           <div className="ml-2 text-blue-400 text-[14px] " onClick={onClickFollow}>
             팔로우
           </div>
@@ -116,10 +120,10 @@ export const ContentDetail = (data: any) => {
             팔로우
           </div>
         )}
-        {/* <div className="ml-auto">
+        <div className="ml-auto">
           <IoIosMore onClick={onOpenModal}></IoIosMore>
           {isModal && <ModalMenu onOpenModal={onOpenModal} />}
-        </div> */}
+        </div>
       </div>
       <div className="relative">
         <img src={data.data.imageUrlList[currentImageIndex]} alt="컨텐츠 이미지" className="w-full h-72" />
@@ -175,6 +179,14 @@ export const ContentDetail = (data: any) => {
         </div>
         <div className="text-[13px] text-gray-500">1시간 전</div>
       </div>
+
+      <BottomSheet
+        open={isBottomSheetOpen}
+        onDismiss={closeBottomSheet}
+        snapPoints={({ minHeight, maxHeight }) => [minHeight, maxHeight / 2, maxHeight]}
+      >
+        <Comment />
+      </BottomSheet>
     </div>
   );
 };
