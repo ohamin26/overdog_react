@@ -5,7 +5,7 @@ import { BiLike } from 'react-icons/bi';
 import { BiSolidLike } from 'react-icons/bi';
 import { MdOutlineNavigateNext } from 'react-icons/md';
 import { GrFormPrevious } from 'react-icons/gr';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilStateLoadable } from 'recoil';
 import { deleteLikeState, likebyPostIdState, likebyUserIdState, setLikeState } from '../recoil/atoms/likeState';
 import toast, { Toaster } from 'react-hot-toast';
 import { deleteFollowState, followingState, setFollowState } from '../recoil/atoms/followState';
@@ -13,6 +13,7 @@ import { userIdState } from '../recoil/atoms/userState';
 import { BottomSheet } from 'react-spring-bottom-sheet';
 import 'react-spring-bottom-sheet/dist/style.css';
 import { Comment } from './comment';
+import { commentState, postIdState } from '../recoil/atoms/postState';
 
 export const ContentDetail = (data: any) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -105,7 +106,23 @@ export const ContentDetail = (data: any) => {
     followerId: data.data.userId,
   };
   const [, setFollowing]: any = useRecoilState(followingState(followData));
+  const [postId] = useRecoilState(postIdState); // 저정된 postId 가져오기
 
+  // 댓글 목록 불러오기
+  const [commentsLoadable] = useRecoilStateLoadable(commentState(postId));
+
+  // commentsLoadable 비동기 상태 관리
+  if (commentsLoadable.state === 'loading') {
+    return <div>로딩 중...</div>;
+  }
+
+  if (commentsLoadable.state === 'hasError') {
+    return <div>에러가 발생했습니다.</div>;
+  }
+  // commentsLoadable로 데이터를 받아온 걸 comments에 저장
+  const comments: any = commentsLoadable.contents;
+  const filteredComments = comments.filter((data: any) => data.origin_commentId === 'null');
+  const commentsLength = filteredComments.length;
   return (
     <div>
       <div className="flex items-center my-3 mx-2">
@@ -175,7 +192,7 @@ export const ContentDetail = (data: any) => {
           </span>
         ))}
         <div className="text-[13px] text-gray-500 cursor-pointer hover:text-black w-fit " onClick={onClick}>
-          댓글 1개 모두 보기
+          댓글 {commentsLength}개 모두 보기
         </div>
         <div className="text-[13px] text-gray-500">1시간 전</div>
       </div>
@@ -185,7 +202,7 @@ export const ContentDetail = (data: any) => {
         onDismiss={closeBottomSheet}
         snapPoints={({ minHeight, maxHeight }) => [minHeight, maxHeight / 2, maxHeight]}
       >
-        <Comment />
+        <Comment comments={comments} />
       </BottomSheet>
     </div>
   );
