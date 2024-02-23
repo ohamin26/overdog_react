@@ -6,6 +6,7 @@ import { useRecoilState, useRecoilStateLoadable } from 'recoil';
 import { commentState, postIdState, setCommentState } from '../recoil/atoms/postState';
 import { useTime } from '../hooks/useTime';
 import toast, { Toaster } from 'react-hot-toast';
+import { useNavigate } from 'react-router';
 
 export const Comment = (comments: any) => {
   const [postId] = useRecoilState(postIdState); // 저정된 postId 가져오기
@@ -26,6 +27,11 @@ export const Comment = (comments: any) => {
     setCommentMoreUserId(userId);
 
     setCommentMoreCommentId(commentId);
+  };
+  // 프로필 이동 이벤트
+  const navigate = useNavigate();
+  const onClickProfile = (userId: any) => {
+    navigate('/profile', { state: userId });
   };
 
   const notifySet = () => toast('추가되었습니다');
@@ -72,10 +78,15 @@ export const Comment = (comments: any) => {
           ) : (
             <div>
               <div className="flex items-center my-3 mx-2">
-                <div className="rounded-full overflow-hidden bg-slate-600 size-8"></div>
+                <div
+                  className="rounded-full overflow-hidden bg-slate-600 size-8"
+                  onClick={() => onClickProfile(data.userId)}
+                ></div>
                 <div>
                   <div className="flex">
-                    <div className="ml-2 text-[14px] font-semibold">{data.userId}</div>
+                    <div className="ml-2 text-[14px] font-semibold" onClick={() => onClickProfile(data.userId)}>
+                      {data.userId}
+                    </div>
                     <div className="ml-2 text-[14px]">{data.commentContent}</div>
                   </div>
                   <div className="flex">

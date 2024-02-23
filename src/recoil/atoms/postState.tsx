@@ -22,10 +22,21 @@ interface CommentData {
   userId: string;
   createdAt: Date;
 }
-// 게시물 목록 가져오기
+// 게시물 목록 가져오기(postId)
 const getPost = async (id: string) => {
   const collectionRef = collection(db, 'posts');
   const postQuery = query(collectionRef, where('postId', '==', id), limit(1));
+  const querySnapshot = await getDocs(postQuery);
+
+  const doc = querySnapshot.docs.map((doc) => doc.data());
+
+  return doc;
+};
+
+// 게시물 목록 가져오기(userId)
+const getPostByUserId = async (id: string) => {
+  const collectionRef = collection(db, 'posts');
+  const postQuery = query(collectionRef, where('userId', '==', id));
   const querySnapshot = await getDocs(postQuery);
 
   const doc = querySnapshot.docs.map((doc) => doc.data());
@@ -83,6 +94,13 @@ export const postState = atomFamily({
   key: 'postState',
   default: async (id: string) => {
     return await getPost(id);
+  },
+});
+
+export const postByUserIdState = atomFamily({
+  key: 'postByUserIdState',
+  default: async (id: string) => {
+    return await getPostByUserId(id);
   },
 });
 

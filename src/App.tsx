@@ -4,6 +4,7 @@ import { Comment } from './components/comment';
 import { Notice } from './routes/notice';
 import { NoticeDetail } from './routes/notice_detail';
 import { RecoilRoot } from 'recoil';
+import { Profile } from './routes/profile';
 function App() {
   return (
     <RecoilRoot>
@@ -14,6 +15,7 @@ function App() {
             <Route path="/comment" element={<Comment />}></Route>
             <Route path="/notice" element={<Notice />}></Route>
             <Route path="/notice_detail" element={<NoticeDetail />}></Route>
+            <Route path="/profile" element={<Profile />}></Route>
           </Routes>
         </Router>
       </div>
