@@ -14,7 +14,7 @@ import { db } from '../../database/firebase';
 import { atom, atomFamily } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 
-const { persistAtom } = recoilPersist();
+recoilPersist();
 interface CommentData {
   commentContent: string;
   postId: string;
@@ -138,6 +138,5 @@ export const setCommentState = atomFamily({
 // 게시물 id 관리
 export const postIdState = atom({
   key: 'postIdState',
-  default: 'null',
-  effects_UNSTABLE: [persistAtom],
+  default: 'NZPl4Cr1fxH54bzJm7Wy',
 });

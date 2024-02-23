@@ -14,6 +14,7 @@ import { BottomSheet } from 'react-spring-bottom-sheet';
 import 'react-spring-bottom-sheet/dist/style.css';
 import { Comment } from './comment';
 import { commentState, postIdState } from '../recoil/atoms/postState';
+import { time } from '../utils/time';
 
 export const ContentDetail = (data: any) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -77,8 +78,11 @@ export const ContentDetail = (data: any) => {
       setPostLike(JSON.parse(likeData));
       const followingData: string | null = localStorage.getItem('following');
       setFollowing(followingData ? JSON.parse(followingData) : null);
-    }, 5000);
+      const commentsData: any = localStorage.getItem('comment');
+      setCommentsLoadable(JSON.parse(commentsData));
+    }, 1000);
   });
+
   //다음 이미지 출력 이벤트
   const goToNextImage = () => {
     const nextIndex = (currentImageIndex + 1) % data.data.imageUrlList.length;
@@ -109,7 +113,7 @@ export const ContentDetail = (data: any) => {
   const [postId] = useRecoilState(postIdState); // 저정된 postId 가져오기
 
   // 댓글 목록 불러오기
-  const [commentsLoadable] = useRecoilStateLoadable(commentState(postId));
+  const [commentsLoadable, setCommentsLoadable] = useRecoilStateLoadable(commentState(postId));
 
   // commentsLoadable 비동기 상태 관리
   if (commentsLoadable.state === 'loading') {
@@ -196,7 +200,7 @@ export const ContentDetail = (data: any) => {
         <div className="text-[13px] text-gray-500 cursor-pointer hover:text-black w-fit " onClick={onClick}>
           댓글 {commentsLength}개 모두 보기
         </div>
-        <div className="text-[13px] text-gray-500">1시간 전</div>
+        <div className="text-[13px] text-gray-500">{time(data.data.createdAt)}</div>
       </div>
 
       <BottomSheet

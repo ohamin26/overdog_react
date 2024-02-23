@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { PiCursorClick } from 'react-icons/pi';
 import { useRecoilState, useRecoilStateLoadable } from 'recoil';
 import { commentState, postIdState, setCommentState } from '../recoil/atoms/postState';
-import { useTime } from '../hooks/useTime';
+import { useTime } from '../utils/timestamp';
 import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate } from 'react-router';
 
