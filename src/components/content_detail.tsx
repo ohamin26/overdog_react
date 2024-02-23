@@ -104,7 +104,7 @@ export const ContentDetail = (data: any) => {
     followingId: userId,
     followerId: data.data.userId,
   };
-  const [following, setFollowing]: any = useRecoilState(followingState(followData));
+  const [, setFollowing]: any = useRecoilState(followingState(followData));
 
   return (
     <div>
