@@ -1,13 +1,12 @@
 import { useLocation, useNavigate } from 'react-router';
 import { PiSquaresFourLight } from 'react-icons/pi';
-import { useRecoilState, useRecoilStateLoadable } from 'recoil';
-import { postByUserIdState, postIdState } from '../recoil/atoms/postState';
+import { useRecoilStateLoadable } from 'recoil';
+import { postByUserIdState } from '../recoil/atoms/postState';
 //라우팅 추가해야함
 export const Profile = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
 
-  const [, setPostId] = useRecoilState(postIdState);
   const [postLoadable] = useRecoilStateLoadable(postByUserIdState(state));
   if (postLoadable.state === 'loading') {
     return <div>로딩 중...</div>;
@@ -17,8 +16,7 @@ export const Profile = () => {
   }
   const post: any = postLoadable.contents;
   const onClick = (data: any) => {
-    setPostId(data.postId);
-    navigate('/');
+    navigate('/ProfileContent', { state: data });
   };
   return (
     <div>

@@ -70,6 +70,7 @@ export const ContentDetail = (data: any) => {
       console.error('Error:', error);
     }
   };
+
   useEffect(() => {
     setTimeout(() => {
       const likeData: any = localStorage.getItem('like');
@@ -80,7 +81,7 @@ export const ContentDetail = (data: any) => {
       setFollowing(followingData ? JSON.parse(followingData) : null);
       const commentsData: any = localStorage.getItem('comment');
       setCommentsLoadable(JSON.parse(commentsData));
-    }, 1000);
+    }, 300);
   });
 
   //다음 이미지 출력 이벤트
@@ -127,6 +128,7 @@ export const ContentDetail = (data: any) => {
   const comments: any = commentsLoadable.contents;
   const filteredComments = comments.filter((data: any) => data.origin_commentId === 'null');
   const commentsLength = filteredComments.length;
+
   return (
     <div>
       <div className="flex items-center my-3 mx-2">
