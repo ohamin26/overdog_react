@@ -6,6 +6,7 @@ import { postByUserIdState } from '../recoil/atoms/postState';
 export const Profile = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
+
   const [postLoadable] = useRecoilStateLoadable(postByUserIdState(state));
   if (postLoadable.state === 'loading') {
     return <div>로딩 중...</div>;
@@ -14,6 +15,9 @@ export const Profile = () => {
     return <div>에러가 발생했습니다.</div>;
   }
   const post: any = postLoadable.contents;
+  const onClick = (data: any) => {
+    navigate('/ProfileContent', { state: data });
+  };
   return (
     <div>
       <div className="flex mx-2 my-2 justify-center ">
@@ -89,9 +93,7 @@ export const Profile = () => {
                   objectFit: 'cover',
                   objectPosition: 'center',
                 }}
-                onClick={() => {
-                  navigate('/', { state: data });
-                }}
+                onClick={() => onClick(data)}
               />
             </div>
           ))}

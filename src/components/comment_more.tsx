@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router';
-import { useTime } from '../hooks/useTime';
+import { useTime } from '../utils/timestamp';
 
 export const CommentMore = (data: any) => {
   const navigate = useNavigate();
