@@ -208,9 +208,9 @@ export const ContentDetail = (data: any) => {
       <BottomSheet
         open={isBottomSheetOpen}
         onDismiss={closeBottomSheet}
-        snapPoints={({ minHeight, maxHeight }) => [minHeight, maxHeight / 2, maxHeight]}
+        snapPoints={({ minHeight, maxHeight }) => [minHeight * 4, maxHeight / 2, maxHeight]}
       >
-        <Comment comments={comments} />
+        <Comment />
       </BottomSheet>
     </div>
   );
