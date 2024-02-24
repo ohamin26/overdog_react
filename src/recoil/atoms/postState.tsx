@@ -1,6 +1,7 @@
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDocs,
   limit,
@@ -10,9 +11,11 @@ import {
   updateDoc,
   where,
 } from 'firebase/firestore';
-import { db } from '../../database/firebase';
+import { db, storage } from '../../database/firebase';
 import { atom, atomFamily } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
+import { ref } from 'firebase/storage';
+import { deleteObject } from 'firebase/storage';
 
 recoilPersist();
 interface CommentData {
@@ -90,6 +93,69 @@ const setComment = async (data: CommentData) => {
   }
 };
 
+const deletePost = async (data: any) => {
+  try {
+    // Storage에서 이미지 삭제
+    data.imageUrlList.forEach(async (imageUrl: string) => {
+      const imageRef: any = ref(storage, `posts/${data.postId}/${imageUrl}`);
+
+      try {
+        await deleteObject(imageRef);
+      } catch (error) {
+        console.error('Error deleting image: ', error);
+      }
+    });
+
+    //댓글 삭제
+    const commentRef = collection(db, 'comments');
+    const commentQuery = query(commentRef, where('postId', '==', data.postId));
+    const commentSnapshot = await getDocs(commentQuery);
+    commentSnapshot.forEach((doc) => {
+      const docRef = doc.ref;
+      deleteDoc(docRef)
+        .then(() => {})
+        .catch((error) => {
+          console.error('Error : ', error);
+        });
+    });
+
+    //좋아요 삭제
+    const likeRef = collection(db, 'likes');
+    const likeQuery = query(likeRef, where('postId', '==', data.postId));
+    const likeSnapshot = await getDocs(likeQuery);
+    likeSnapshot.forEach((doc) => {
+      const docRef = doc.ref;
+      deleteDoc(docRef)
+        .then(() => {})
+        .catch((error) => {
+          console.error('Error : ', error);
+        });
+    });
+
+    //게시물 삭제
+    const collectionRef = collection(db, 'posts');
+    const postQuery = query(collectionRef, where('postId', '==', data.postId));
+    const querySnapshot = await getDocs(postQuery);
+    querySnapshot.forEach((doc) => {
+      const docRef = doc.ref;
+      deleteDoc(docRef)
+        .then(() => {})
+        .catch((error) => {
+          console.error('Error : ', error);
+        });
+    });
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const deletePostState = atomFamily({
+  key: 'deletePostState',
+  default: async (data: any) => {
+    return await deletePost(data);
+  },
+});
+
 export const postState = atomFamily({
   key: 'postState',
   default: async (id: string) => {
@@ -138,5 +204,5 @@ export const setCommentState = atomFamily({
 // 게시물 id 관리
 export const postIdState = atom({
   key: 'postIdState',
-  default: 'NZPl4Cr1fxH54bzJm7Wy',
+  default: 'null',
 });

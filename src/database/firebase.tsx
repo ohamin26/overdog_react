@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 
 //firebase 연동
 const firebaseConfig = {
@@ -12,5 +13,6 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+const storage: any = getStorage(app);
 const db = getFirestore(app);
-export { db };
+export { db, storage };
