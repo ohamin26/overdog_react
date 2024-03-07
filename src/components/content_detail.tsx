@@ -18,12 +18,11 @@ import { time } from '../utils/time';
 
 export const ContentDetail = (data: any) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [followVisible, setFollowVisible] = useState(true);
+  const [followVisible, setFollowVisible] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const isAtFirstImage = currentImageIndex === 0;
   const isAtLastImage = currentImageIndex === data.data.imageUrlList.length - 1;
   const [isModal, setIsModal] = useState(false);
-
   //모달창 실행 이벤트
   const onOpenModal = () => {
     setIsModal(!isModal);
@@ -151,7 +150,7 @@ export const ContentDetail = (data: any) => {
         </div>
       </div>
       <div className="relative">
-        <img src={data.data.imageUrlList[currentImageIndex]} alt="컨텐츠 이미지" className="w-full h-72" />
+        <img src={data.data.imageUrlList[currentImageIndex]} alt="컨텐츠 이미지" className="w-screen h-[55vh]" />
         {!isAtFirstImage && (
           <button
             className="absolute left-0 top-1/2 transform -translate-y-1/2 ml-1 text-4xl bg-white rounded-full opacity-70"
