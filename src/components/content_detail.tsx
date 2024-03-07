@@ -95,16 +95,17 @@ export const ContentDetail = (data: any) => {
   };
 
   const [postLike, setPostLike]: any = useRecoilState(likebyPostIdState(data.data.postId));
+  const [userId] = useRecoilState(userIdState);
+
   const idData = {
     postId: data.data && data.data.postId,
-    userId: data.data && data.data.userId,
+    userId: data.data && userId,
   };
   const [userLike, setUserLike]: any = useRecoilState(likebyUserIdState(idData));
   if (userLike == null) {
     setIsVisible(!isVisible);
   }
 
-  const [userId] = useRecoilState(userIdState);
   const followData: any = {
     followingId: userId,
     followerId: data.data.userId,
