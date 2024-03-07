@@ -7,6 +7,7 @@ import { commentState, postIdState, setCommentState } from '../recoil/atoms/post
 import { useTime } from '../utils/timestamp';
 import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate } from 'react-router';
+import { userIdState } from '../recoil/atoms/userState';
 
 export const Comment = () => {
   const [postId] = useRecoilState(postIdState); // 저정된 postId 가져오기
@@ -35,6 +36,7 @@ export const Comment = () => {
   };
 
   const notifySet = () => toast('추가되었습니다');
+  const [userId] = useRecoilState(userIdState);
   // 답글 달기 버튼 이벤트
   const onSubmit = () => {
     // 답글 쓴거 초기화
@@ -42,7 +44,7 @@ export const Comment = () => {
     const userComment = textareaValue.trim();
     // 댓글 등록하기 위한 데이터
     const data = {
-      userId: 'test',
+      userId: userId,
       commentContent: userComment,
       postId: postId,
       originCommentId: commentMoreCommentId != '' ? commentMoreCommentId : 'null',
@@ -87,9 +89,9 @@ export const Comment = () => {
     <div className="font-pretendard">
       {/* 가져온 댓글 목록 출력 */}
       {comments.length > 0 ? (
-        <div>
+        <div key={comments.length}>
           {comments.map((data: any, index: any) => (
-            <div key={data.commentId}>
+            <div key={index}>
               {data.origin_commentId != 'null' ? (
                 ''
               ) : (
