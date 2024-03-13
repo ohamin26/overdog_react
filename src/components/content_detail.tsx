@@ -95,16 +95,17 @@ export const ContentDetail = (data: any) => {
   };
 
   const [postLike, setPostLike]: any = useRecoilState(likebyPostIdState(data.data.postId));
+  const [userId] = useRecoilState(userIdState);
+
   const idData = {
     postId: data.data && data.data.postId,
-    userId: data.data && data.data.userId,
+    userId: data.data && userId,
   };
   const [userLike, setUserLike]: any = useRecoilState(likebyUserIdState(idData));
   if (userLike == null) {
     setIsVisible(!isVisible);
   }
 
-  const [userId] = useRecoilState(userIdState);
   const followData: any = {
     followingId: userId,
     followerId: data.data.userId,
@@ -132,7 +133,7 @@ export const ContentDetail = (data: any) => {
     <div>
       <div className="flex items-center my-3 mx-2">
         <div className="rounded-full overflow-hidden size-10">
-          <img src="../../overdog_react/free-icon-cool-7298816.png"></img>
+          <img src="../../free-icon-cool-7298816.png"></img>
         </div>
         <div className="ml-2 text-[14px] font-bold">{data.data.userId}</div>
         {followVisible ? (

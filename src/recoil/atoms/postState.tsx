@@ -14,7 +14,7 @@ import {
 import { db, storage } from '../../database/firebase';
 import { atom, atomFamily } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
-import { ref } from 'firebase/storage';
+import { ref, listAll } from 'firebase/storage';
 import { deleteObject } from 'firebase/storage';
 
 recoilPersist();
@@ -96,15 +96,16 @@ const setComment = async (data: CommentData) => {
 const deletePost = async (data: any) => {
   try {
     // Storage에서 이미지 삭제
-    data.imageUrlList.forEach(async (imageUrl: string) => {
-      const imageRef: any = ref(storage, `posts/${data.postId}/${imageUrl}`);
-
-      try {
-        await deleteObject(imageRef);
-      } catch (error) {
-        console.error('Error deleting image: ', error);
-      }
-    });
+    const imageRef: any = ref(storage, `posts/${data.postId}`);
+    listAll(imageRef)
+      .then((res: any) => {
+        res.items.forEach(async (item: any) => {
+          await deleteObject(item);
+        });
+      })
+      .catch((error: any) => {
+        console.error('Error get image: ', error);
+      });
 
     //댓글 삭제
     const commentRef = collection(db, 'comments');
